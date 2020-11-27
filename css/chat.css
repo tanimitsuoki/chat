@@ -1,0 +1,59 @@
+body{background-color:rgb(112, 171, 199);
+}
+
+.title{
+font-size: 60px;
+margin: 0 0 0 10px;
+}
+.date1{
+margin: 0 0 10px 32px;
+
+}
+
+.title3{
+    margin: 0 0 10px 32px;
+    
+    }
+
+.title2{
+    margin: 0 0 10px 0;
+    
+    }
+
+.setu{
+ margin: 0 0 10px 68px;
+}
+
+#send{
+margin: 0 0 20px 0;
+
+}
+
+.g{
+    width: 100px
+}
+
+.a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:rgb(15, 15, 15);
+    color: #fff;
+}
+
+#output2{
+ text-align: right;
+
+}
+.d{
+    text-align: right;
+
+
+}
+
+.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}

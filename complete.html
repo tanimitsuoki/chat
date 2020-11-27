@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Chatアプリ</title>
+  <link rel="stylesheet" href="css/chat.css">
+</head>
+
+<body>
+  <!-- ブラウザの画面に見える内容 -->
+
+
+
+ <div class="a">
+    <div >
+      <img src="https://firebasestorage.googleapis.com/v0/b/dev18-chat01-23024.appspot.com/o/buke.png?alt=media&token=5695a19a-dc4f-41af-983c-4082eb55e7dc" alt="トップ" class="g">
+    </div>
+    <p class="title">chatアプリ</p>
+  </div>
+
+  <div id="output3">
+    <!-- 保存されたデータが表示される箇所 -->
+    <div id="output" class="c"></div>
+    <div id="output2"></div>
+  </div>
+
+
+   <div>
+    <!-- 日付 -->
+    日付
+    <input type="date" id="date" class="date1">
+  </div>
+
+  <div>
+    <!-- 名前 -->
+    名前
+    <select name="example" id="who" class="title3">
+      <option value="自分">自分</option>
+      <option value="その他">その他</option>
+    </select>
+  </div>
+
+
+
+  <div>
+    <!-- 名前 -->
+    タイトル
+    <input type="text" id="username" class="title2">
+  </div>
+
+  <div class="setu1"> 
+    <!-- テキストエリア -->
+   <dt class="setu2">説明</dt> 
+    <textarea name="" id="text" cols="30" rows="10" class="setu"></textarea>
+  </div>
+
+  <div>
+    <!-- 送信ボタン -->
+    <button id="send">送信</button>
+  </div>
+
+  <div>
+    <!-- 全削除 -->
+    <button id="sakujyo">全削除</button>
+  </div>
+
+
+
+  <!-- ブラウザの画面に見える内容 -->
+
+
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- JQuery -->
+
+  <!--** 以下Firebase **-->
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <!-- firebaseのverが変わるので、数字がどんどん変化します🙋‍♀️ -->
+  <!-- ここにfirebaseのscriptを貼り付ける -->
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCqVg_NyEEVBLd7pb7QDJDzrHQlPvzfBZs",
+      authDomain: "dev18-chat01-23024.firebaseapp.com",
+      databaseURL: "https://dev18-chat01-23024.firebaseio.com",
+      projectId: "dev18-chat01-23024",
+      storageBucket: "dev18-chat01-23024.appspot.com",
+      messagingSenderId: "258135251170",
+      appId: "1:258135251170:web:d750825abc7c95217526bb"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    //firebaseのデーターベース（保存させる場所）を使いますよ
+    const newPostRef = firebase.database().ref();
+
+    // ここから下にjqueryの処理を書いて練習します
+ 
+    $(function() {
+    var nav = $('.a');
+    //navの位置    
+    var navTop = nav.offset().top;
+    //スクロールするたびに実行
+    $(window).scroll(function () {
+        var winTop = $(this).scrollTop();
+        //スクロール位置がnavの位置より下だったらクラスfixedを追加
+        if (winTop >= navTop) {
+            nav.addClass('fixed')
+        } else if (winTop <= navTop) {
+            nav.removeClass('fixed')
+        }
+     });
+    });
+
+
+    // 送信ボタンをクリックされたら次の処理をする
+    $("#send").on("click", function () {
+      // データを登録で送る
+      newPostRef.push({
+        who: $("#who").val(),//名前
+        date: $("#date").val(),//日付
+        username: $("#username").val(), //名前
+        text: $("#text").val()//テキストエリア
+      })
+      $("#date").val(""); 
+      $("#text").val(""); //空にする
+      $("#username").val(""); //空にする
+    });
+
+
+     // 全削除ボタンをクリックされたら次の処理をする
+    $("#sakujyo").on("click", function () {
+       newPostRef.remove();
+       location.reload();
+    });
+
+    $("#send").on("click", function () {
+      var f = $("#who").val();
+      if(f == "自分"){
+        console.log("自分");
+        $("#output").append("<img src=imgs/自己紹介画像.jpg width=80>");
+      }else if(f == "その他"){
+        $("#output").append("<img src=imgs/buke.png width=80>");
+      }
+    });
+
+    // 受信処理
+    newPostRef.on("child_added", function (data) {
+      var f = $("#who").val();
+      if(f == "自分"){
+        let v = data.val(); //ここに保存されたデータが全て入ってくる
+        // let k = data.key; //今回は使いません
+
+        console.log(v); //vの変数に入っているオブジェクトを全てみる
+
+        let str = `<p>${v.who}<p>${v.date}<br>${v.username}<br>${v.text}</p>`;
+
+        // ここでデータをhtmlに埋め込む
+        $("#output").append(str);
+
+
+      }else if(f == "その他"){
+        let v = data.val(); //ここに保存されたデータが全て入ってくる
+        // let k = data.key; //今回は使いません
+        console.log(v); //vの変数に入っているオブジェクトを全てみる
+        let str = `<p>${v.who}<p>${v.date}<br>${v.username}<br>${v.text}</p>`;
+        // ここでデータをhtmlに埋め込む
+        $("#output").append(str);
+
+      }
+      
+    })
+
+
+    $("#text").on("keydown", function (e) {
+      console.log(e, "event");
+
+      if (e.keyCode === 13) {
+        newPostRef.push({
+          username: $("#username").val(), //名前
+          text: $("#text").val(), //テキストエリア
+        })
+        $("#text").val(""); //空にする
+        $("#username").val(""); //空にする
+      }
+    })
+
+
+  </script>
+</body>
+
+</html>
